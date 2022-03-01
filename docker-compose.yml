@@ -1,0 +1,17 @@
+version: '3'
+services:
+  weather-service:
+    container_name: "weather-app"
+    build:
+      context: weather_service
+      dockerfile: Dockerfile
+    volumes:
+      - raw-data-volume:/data/raw:rw
+    networks:
+      - weather-analytics
+
+volumes:
+  raw-data-volume:
+  trusted-data-volume:
+networks:
+  weather-analytics:
