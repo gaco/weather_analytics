@@ -20,20 +20,22 @@ def get_cities_coordenates(cities):
     try:
         for city in cities:
             location = geolocator.geocode(city)
-            city_coords[city] = [location.latitude, location.longitude, location.address]
+            city_coords[city] = [location.latitude,
+                                 location.longitude, location.address]
 
     except GeocoderTimedOut:
         logger.error("The call to the geocoding service in order to get coordenates for the locations was aborted because no response has been received within 10 seconds.")
         raise
     except Exception:
-        logger.error("Some unkown excection happened during the call to the geocoding service in order to get coordenates for the locations.")
+        logger.error(
+            "Some unkown excection happened during the call to the geocoding service in order to get coordenates for the locations.")
         raise
     return city_coords
 
 
 def call_weather_api(coordenate, output_name, time):
     api = "https://api.openweathermap.org/data/2.5/onecall/timemachine?"
-    api_key = os.getenv("OPEN_API_KEY")  # "ce6a01afec4d8d72c298b47d530c37a8"
+    api_key = os.getenv("OPEN_API_KEY")
     lat, lon = coordenate[0], coordenate[1]
     url = api + \
         f"lat={lat}&lon={lon}&dt={time}&appid={api_key}"
@@ -49,7 +51,7 @@ if __name__ == "__main__":
 
     timestamp = calendar.timegm(time.gmtime())
     utc_datetime = datetime.datetime.fromtimestamp(timestamp)
-    raw_data_dir = sys.argv[1]  # "./data/raw/
+    raw_data_dir = sys.argv[1]
 
     location_coords = {}
     try:
