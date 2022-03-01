@@ -8,10 +8,23 @@ services:
     volumes:
       - raw-data-volume:/data/raw:rw
     networks:
-      - weather-analytics
+      - weather-analytics-network
+  spark-service:
+    depends_on:
+      - weather-service
+    container_name: "spark-job"
+    build:
+      context: spark_service
+      dockerfile: Dockerfile
+    volumes:
+      - raw-data-volume:/data/raw:ro
+      - trusted-data-volume:/data/trusted:rw
+    networks:
+      - weather-analytics-network
+    command: "./script_check.sh"
 
 volumes:
   raw-data-volume:
   trusted-data-volume:
 networks:
-  weather-analytics:
+  weather-analytics-network:

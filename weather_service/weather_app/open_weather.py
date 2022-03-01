@@ -40,6 +40,10 @@ def call_weather_api(coordenate, output_name, time):
     url = api + \
         f"lat={lat}&lon={lon}&dt={time}&appid={api_key}"
     logger.debug(f"{url}")
+
+    opener = request.build_opener()
+    opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+    request.install_opener(opener)
     request.urlretrieve(url, output_name)
 
 
@@ -64,8 +68,7 @@ if __name__ == "__main__":
     for t in range(days):
         previous_day = utc_datetime - datetime.timedelta(days=t+1)
 
-        execution_time = utc_datetime.strftime('%Y%m%d_%H%M%S')
-        output_dir = f"{raw_data_dir}/{execution_time}/{previous_day.strftime('%Y%m%d_%H%M%S')}/"
+        output_dir = f"{raw_data_dir}/{previous_day.strftime('%Y%m%d_%H%M%S')}/"
         os.makedirs(output_dir, exist_ok=True)
 
         for location, coordenate in location_coords.items():
