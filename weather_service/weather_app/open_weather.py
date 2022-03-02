@@ -58,10 +58,6 @@ if __name__ == "__main__":
     utc_datetime = datetime.datetime.fromtimestamp(timestamp)
     raw_data_dir = sys.argv[1]
 
-    # I decided to override all directories in raw data dir before it execution
-    if os.path.exists(raw_data_dir):
-        shutil.rmtree(raw_data_dir)
-
     location_coords = {}
     try:
         location_coords = get_cities_coordenates(locations)
@@ -74,7 +70,7 @@ if __name__ == "__main__":
         previous_day = utc_datetime - datetime.timedelta(days=t+1)
 
         output_dir = f"{raw_data_dir}/{previous_day.strftime('%Y%m%d_%H%M%S')}/"
-        os.makedirs(output_dir)
+        os.makedirs(output_dir, exist_ok=True)
 
         for location, coordenate in location_coords.items():
             # calling API
