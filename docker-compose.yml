@@ -13,6 +13,7 @@ services:
     depends_on:
       - weather-service
     container_name: "spark-job"
+    restart: always
     build:
       context: spark_service
       dockerfile: Dockerfile
@@ -22,8 +23,10 @@ services:
     networks:
       - weather-analytics-network
     healthcheck:
-      test: [ "CMD", "ls", "/data/raw/_SUCCESS" ]
-      interval: 5s
+      test: [ "CMD-SHELL", "test -f /data/raw/_SUCCESS" ]
+      interval: 20s
+      retries: 6
+      timeout: 2m
     command:
       [
         "spark-submit",
