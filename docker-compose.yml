@@ -21,7 +21,16 @@ services:
       - trusted-data-volume:/data/trusted:rw
     networks:
       - weather-analytics-network
-    command: "./script_check.sh"
+    healthcheck:
+      test: [ "CMD", "ls", "/data/raw/_SUCCESS" ]
+      interval: 5s
+    command:
+      [
+        "spark-submit",
+        "weather_job.py",
+        "file:///data/raw",
+        "file:///data/trusted"
+      ]
 
 volumes:
   raw-data-volume:
